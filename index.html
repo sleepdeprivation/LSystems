@@ -1,0 +1,99 @@
+<html>
+	<style>
+			canvas{
+				left: 0px;
+				top: 0px;
+				position: absolute;
+			}
+	</style>
+
+
+<script src="lsystem.js"></script>
+
+			<canvas id="view1" width= "1280px" height ="600px"> Can't see me! </canvas>
+
+
+<script>
+
+	var canvas1 = document.getElementById('view1');
+	var ctx = canvas1.getContext('2d');
+
+	var data = String("F");
+	var rule = {
+		'F': 'F+E+',
+		'E': '-F-E'
+		}
+
+	var system = new Lsystem(data, rule);
+	
+	for(var ii = 0; ii < 18; ii++){
+		system.step();
+		console.log(system.string);
+	}
+	var deltaI = 0;
+	var delta = Math.PI/2;
+	var x = 500;
+	var y = 400;
+	ctx.moveTo(x, y);
+
+
+	function draw(){
+		ctx.beginPath();
+
+		ctx.fillStyle="red";
+
+		var deltaX,deltaY,newX,newY;
+		for(var ii = 0; ii < system.string.length; ii++){
+
+			if(system.string[ii] == 'F' || system.string[ii] == 'E'){
+				//console.log("moving on");
+				deltaX = 4*Math.cos((deltaI)*(delta));
+				deltaY = 4*Math.sin((deltaI)*(delta));
+				x += deltaX;
+				y += deltaY;
+				//console.log(x, y);
+				ctx.lineTo(x, y);
+			}
+			if(system.string[ii] == '+'){
+				deltaI = (deltaI+1)%4;
+			}
+			if(system.string[ii] == '-'){
+				deltaI = (deltaI-1)%4;
+			}
+		}
+
+		ctx.stroke();
+	}
+
+	draw();
+
+	/*
+		I think this is O(n^6) ?
+	*/
+	function findMostRepeat(string){
+		for(var ii = 1; ii < string.length; ii++){//the size of the comparison string
+			for(var kk = 1; kk < string.length; kk++){ //the starting index of the comparison string
+				for(var ee = 1; ee < string.length; ee++){ //the starting index of the string to be compared
+
+				}
+			}
+		}
+	}
+
+
+/*
+	setInterval(function(){
+		ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+		system.step();
+		draw();
+		}, 200);
+
+*/
+
+</script>
+
+
+
+
+
+</html>
