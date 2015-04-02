@@ -1,30 +1,3 @@
-/*
-//really, unecessary
-//wrote this because I though it would be a good idea to generate a new string
-//without allocating a new one and throwing away the old
-//Such a solution seems convoluted and unecessary tho
-//string as a linked list... hmm
-
-function listNode(data, next){
-	this.data = data || null;
-	this.next = next || null;
-}
-
-//construct linked list from an ordinary one
-function list(data){
-	this.length = data.length;
-	this.head = new listNode();
-	this.data = data;
-	var node = this.head;
-	for(var ii = 0; ii < data.length - 1 ; ii++){
-		node.data = data[ii];
-		node.next = new listNode();
-		node = node.next;
-	}
-	node.data = data[data.length-1];
-	this.tail = node;
-}
-*/
 
 
 /*
@@ -57,7 +30,59 @@ function Lsystem(s, L){
 }
 
 
+function LSystemRenderer(s, canvas){
 
+	this.system = s;
+
+	this.forwardStrings = ['F', 'E'];
+	this.turnLeftStrings = ['-'];
+	this.turnRightStrings = ['+'];
+
+	this.lineColor = "red";
+
+	this.initialOrientation = 0;	//pointing up
+	this.theta = Math.PI/2;		//quarter turn
+	this.increment = 4;
+
+	var x = canvas.width/2;		//starting location, (x,y)
+	var y = canvas.height/2;
+
+	this.ctx = canvas.getContext('2d');
+	this.ctx.moveTo(x, y);
+
+	this.draw = function(){
+		var system = this.system;
+
+		var deltaI = this.initialOrientation;
+		var delta = this.theta;
+
+		var ctx = this.ctx;
+
+		ctx.beginPath();
+		ctx.fillStyle= this.lineColor;
+
+		var deltaX,deltaY,newX,newY;
+		for(var ii = 0; ii < system.string.length; ii++){
+			if(this.forwardStrings.indexOf( system.string[ii] ) != -1){
+				//console.log("moving on");
+				deltaX = this.increment*Math.cos((deltaI)*(delta));
+				deltaY = this.increment*Math.sin((deltaI)*(delta));
+				x += deltaX;
+				y += deltaY;
+				//console.log(x, y);
+				ctx.lineTo(x, y);
+			}else if(this.turnRightStrings.indexOf(system.string[ii]) != -1){
+				deltaI = (deltaI+1)%4;
+			}else if(this.turnLeftStrings.indexOf(system.string[ii]) != -1){
+				deltaI = (deltaI-1)%4;
+			}
+		}
+
+		ctx.stroke();
+	}
+
+
+}
 
 
 

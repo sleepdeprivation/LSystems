@@ -1,76 +1,128 @@
 <html>
 	<style>
+
+			.telly{
+				display: inline-block;
+				width: 16%;
+			}
+
+			.ruleString{
+			}
+
 			canvas{
 				left: 0px;
 				top: 0px;
-				position: absolute;
+				//position: absolute;
+				border: 1px solid black;
+				border-radius: 2em;
 			}
 	</style>
 
 
 <script src="lsystem.js"></script>
 
-			<canvas id="view1" width= "1280px" height ="600px"> Can't see me! </canvas>
+<script src="handlebars-v3.0.0.js"></script>
+
+<script id="canvas-template" type="text/x-handlebars-template">
+	<div class="telly">
+		<canvas id="view{{number}}" width= "200" height ="200"> Can't see me! </canvas>
+		<div class="ruleString">{{rules1}}<br/>{{rules2}}</div>
+	</div>
+</script>
+
+	<div id="infobox"></div>
+
+	<div id="canvasses">
+
+	</div>
+
 
 
 <script>
 
-	var canvas1 = document.getElementById('view1');
-	var ctx = canvas1.getContext('2d');
+//[0,x]
+function randomNumber(x){
+	return Math.floor((Math.random() * x) + 1);
+}
 
+var possible = ['F', '+', '-', 'E'];
 
-	//F and E are foreword, + is turn positive (cclockwise), - is turn negative (clockwise)
-	var data = String("F");
-	var rule = {
-		'F': 'F+E+',
-		'E': '-F-E'
-		}
-
-	var system = new Lsystem(data, rule);
-	
-	for(var ii = 0; ii < 18; ii++){
-		system.step();
-		console.log(system.string);
+function singleRuleRandom(x){
+	var retval = "";
+	for(var ii = 0; ii < x; ii++){
+		retval += String(possible[randomNumber(possible.length-1)]);
 	}
-	
-	
-	var deltaI = 0;		//orientation
-	var delta = Math.PI/2;	//angle we turn when we turn
-	var x = 500;		//starting location, (x,y)
-	var y = 400;
-	ctx.moveTo(x, y);
+	return retval;
+}
 
+function ruleSetRandom(){
+	var rule = 	{
+				'F': singleRuleRandom(10),
+				'E': singleRuleRandom(10)
+			};
+	return rule;
+}
 
-	function draw(){
-		ctx.beginPath();
+document.addEventListener("DOMContentLoaded", function(){
+	var source   = document.getElementById("canvas-template").innerHTML;
+	var template = Handlebars.compile(source);
+	var html;
+	var injectTo = document.getElementById("canvasses");
 
-		ctx.fillStyle="red";
+	var systems = [];
+	var renderers = [];
 
-		var deltaX,deltaY,newX,newY;
-		for(var ii = 0; ii < system.string.length; ii++){
+	var data, system, renderer, canvas1, ii, kk;
 
-			if(system.string[ii] == 'F' || system.string[ii] == 'E'){
-				//console.log("moving on");
-				deltaX = 4*Math.cos((deltaI)*(delta));
-				deltaY = 4*Math.sin((deltaI)*(delta));
-				x += deltaX;
-				y += deltaY;
-				//console.log(x, y);
-				ctx.lineTo(x, y);
-			}
-			if(system.string[ii] == '+'){
-				deltaI = (deltaI+1)%4;
-			}
-			if(system.string[ii] == '-'){
-				deltaI = (deltaI-1)%4;
-			}
-		}
+	var stop = 24;
 
-		ctx.stroke();
+	var ruleSet = [];
+
+	for(ii = 0; ii < stop; ii++){
+		ruleSet.push(ruleSetRandom());
 	}
 
-	draw();
+	console.log(ruleSet);
 
+	for(ii = 0; ii < stop; ii++){
+
+		console.log('view' + String(ii));
+		var noBracket = JSON.stringify(ruleSet[ii]).replace("}", "").replace("{","");
+		var twoString = noBracket.split(",");
+		html = template({number: ii, rules1: twoString[0], rules2: twoString[1]});
+		injectTo.innerHTML += html;
+	}
+	for(ii = 0; ii < stop; ii++){
+
+		canvas1 = document.getElementById('view' + String(ii));
+		canvas1.dataset.index = ii;
+
+		//F and E are foreword, + is turn positive (cclockwise), - is turn negative (clockwise)
+		data = String("F");
+		rule = ruleSet[ii];	//console.log(rule);
+		/*rule = {		//dragon curve
+			'F': 'F+E+',
+			'E': '-F-E'
+			}
+		*/
+		system = new Lsystem(data, rule);
+	
+		for(var kk = 0; kk < 8; kk++){
+			system.step();
+		}
+
+		renderer = new LSystemRenderer(system, canvas1);
+		renderer.draw();
+
+		systems.push(system);
+		renderers.push(renderer);
+
+		canvas1.addEventListener('click', function() {
+			var ruleString = JSON.stringify(systems[this.dataset.index].productionRules);
+			document.querySelector('#infobox').innerHTML = ruleString;
+		}, false);
+	}
+});
 
 /*
 	//drawing every step
