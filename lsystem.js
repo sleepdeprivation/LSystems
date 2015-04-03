@@ -59,7 +59,7 @@ function LSystemRenderer(s, canvas){
 		var ctx = this.ctx;
 
 		ctx.beginPath();
-		ctx.fillStyle= this.lineColor;
+		ctx.strokeStyle= this.lineColor;
 
 		var deltaX,deltaY,newX,newY;
 		for(var ii = 0; ii < system.string.length; ii++){
