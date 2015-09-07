@@ -34,14 +34,19 @@ function LSystemRenderer(s, canvas){
 
 	this.system = s;
 
+	this.divisor = 8;
+
 	this.forwardStrings = ['F', 'E'];
 	this.turnLeftStrings = ['-'];
 	this.turnRightStrings = ['+'];
 
+	this.RBGStrings = ['R', 'B', 'G']; //for changing colors
+	this.lineColors = ['red', 'blue', 'green'];
+
 	this.lineColor = "red";
 
 	this.initialOrientation = 0;	//pointing up
-	this.theta = Math.PI/2;		//quarter turn
+	this.theta = Math.PI/this.divisor;
 	this.increment = 4;
 
 	var x = canvas.width/2;		//starting location, (x,y)
@@ -58,13 +63,15 @@ function LSystemRenderer(s, canvas){
 
 		var ctx = this.ctx;
 
+		var divisor2 = this.divisor*2;
+
 		ctx.beginPath();
 		ctx.strokeStyle= this.lineColor;
 
-		var deltaX,deltaY,newX,newY;
+		var deltaX,deltaY,newX,newY, color;
 		for(var ii = 0; ii < system.string.length; ii++){
 			if(this.forwardStrings.indexOf( system.string[ii] ) != -1){
-				//console.log("moving on");
+				//console.log((deltaI*delta));
 				deltaX = this.increment*Math.cos((deltaI)*(delta));
 				deltaY = this.increment*Math.sin((deltaI)*(delta));
 				x += deltaX;
@@ -72,9 +79,15 @@ function LSystemRenderer(s, canvas){
 				//console.log(x, y);
 				ctx.lineTo(x, y);
 			}else if(this.turnRightStrings.indexOf(system.string[ii]) != -1){
-				deltaI = (deltaI+1)%4;
+				deltaI = (deltaI+1)%(divisor2);
 			}else if(this.turnLeftStrings.indexOf(system.string[ii]) != -1){
-				deltaI = (deltaI-1)%4;
+				deltaI = (deltaI-1)%(divisor2);
+			}else if(this.RBGStrings.indexOf(system.string[ii]) != -1){
+				color = this.RBGStrings.indexOf(system.string[ii]);
+				ctx.closePath();
+				ctx.stroke();
+				ctx.strokeStyle = this.lineColors[color];
+				ctx.beginPath();
 			}
 		}
 

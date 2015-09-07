@@ -3,16 +3,16 @@
 
 			.telly{
 				display: inline-block;
-				width: 16%;
+				width: 100%;
 			}
 
 			.ruleString{
 			}
 
 			canvas{
-				left: 0px;
-				top: 0px;
-				//position: absolute;
+				left: 40px;
+				top: 50px;
+				position: absolute;
 				border: 1px solid black;
 				border-radius: 2em;
 			}
@@ -25,7 +25,7 @@
 
 <script id="canvas-template" type="text/x-handlebars-template">
 	<div class="telly">
-		<canvas id="view{{number}}" width= "200" height ="200"> Can't see me! </canvas>
+		<canvas id="view{{number}}" width= "720" height ="480"> Can't see me! </canvas>
 		<div class="ruleString">{{rules1}}<br/>{{rules2}}</div>
 	</div>
 </script>
@@ -42,23 +42,23 @@
 
 //[0,x]
 function randomNumber(x){
-	return Math.floor((Math.random() * x) + 1);
+	return Math.floor((Math.random() * x));// + 1);
 }
 
-var possible = ['F', '+', '-', 'E'];
+var possible = ['F', '+', '-', 'E', 'B', 'G', 'R'];
 
 function singleRuleRandom(x){
 	var retval = "";
 	for(var ii = 0; ii < x; ii++){
-		retval += String(possible[randomNumber(possible.length-1)]);
+		retval += String(possible[randomNumber(possible.length)]);
 	}
 	return retval;
 }
 
 function ruleSetRandom(){
 	var rule = 	{
-				'F': singleRuleRandom(10),
-				'E': singleRuleRandom(10)
+				'F': singleRuleRandom(13),
+				'E': singleRuleRandom(13)
 			};
 	return rule;
 }
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	var data, system, renderer, canvas1, ii, kk;
 	
-	var stop = 24;
+	var stop = 1;
 
 	var ruleSet = [];
 
