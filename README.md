@@ -2,7 +2,7 @@
 
 A little library for creating L-Systems, recently converted to typescript and webpack.
 
-To compile, just `npm install` followed by `npm run build`. This should create `lsystems.js` which exports 3 classes:
+To compile, just `npm install` followed by `npm run build`. This should create `lsystems.js` which exports 3 classes under the package `lsystems`:
 
 * LSystem
 * LSystemRenderer
