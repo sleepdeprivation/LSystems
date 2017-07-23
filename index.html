@@ -1,148 +1,33 @@
 <html>
-	<style>
+    <head>
+        <script src="lsystems.js"></script>
+    </head>
 
-			.telly{
-				display: inline-block;
-				width: 100%;
-			}
+    <body>
+        <canvas id="canvas" width=1200 height=800></canvas>
+    </body>
 
-			.ruleString{
-			}
+    <script>
 
-			canvas{
-				left: 40px;
-				top: 50px;
-				position: absolute;
-				border: 1px solid black;
-				border-radius: 2em;
-			}
-	</style>
+      document.addEventListener("DOMContentLoaded", function(){
 
+      	var canvas1 = document.getElementById("canvas");
 
-<script src="lsystem.js"></script>
+      	var data, system, renderer, canvas1, ii, kk;
+        console.log(lsystems);
 
-<script src="handlebars-v3.0.0.js"></script>
+        system = (new lsystems.LSystemGenerator).dragonCurve();
+        system.stepn(8);
+        renderCfg = {
+          system : system,
+          canvas : canvas
+        }
+        renderer = new lsystems.LSystemRenderer(renderCfg);
+        renderer.draw();
 
-<script id="canvas-template" type="text/x-handlebars-template">
-	<div class="telly">
-		<canvas id="view{{number}}" width= "720" height ="480"> Can't see me! </canvas>
-		<div class="ruleString">{{rules1}}<br/>{{rules2}}</div>
-	</div>
-</script>
+      });
 
-	<div id="infobox"></div>
-
-	<div id="canvasses">
-
-	</div>
-
-
-
-<script>
-
-//[0,x]
-function randomNumber(x){
-	return Math.floor((Math.random() * x));// + 1);
-}
-
-var possible = ['F', '+', '-', 'E', 'B', 'G', 'R'];
-
-function singleRuleRandom(x){
-	var retval = "";
-	for(var ii = 0; ii < x; ii++){
-		retval += String(possible[randomNumber(possible.length)]);
-	}
-	return retval;
-}
-
-function ruleSetRandom(){
-	var rule = 	{
-				'F': singleRuleRandom(13),
-				'E': singleRuleRandom(13)
-			};
-	return rule;
-}
-
-document.addEventListener("DOMContentLoaded", function(){
-	var source   = document.getElementById("canvas-template").innerHTML;
-	var template = Handlebars.compile(source);
-	var html;
-	var injectTo = document.getElementById("canvasses");
-
-	var systems = [];
-	var renderers = [];
-
-	var data, system, renderer, canvas1, ii, kk;
-	
-	var stop = 1;
-
-	var ruleSet = [];
-
-	for(ii = 0; ii < stop; ii++){
-		ruleSet.push(ruleSetRandom());
-	}
-
-	console.log(ruleSet);
-
-	for(ii = 0; ii < stop; ii++){
-
-		console.log('view' + String(ii));
-		var noBracket = JSON.stringify(ruleSet[ii]).replace("}", "").replace("{","");
-		var twoString = noBracket.split(",");
-		html = template({number: ii, rules1: twoString[0], rules2: twoString[1]});
-		injectTo.innerHTML += html;
-	}
-	for(ii = 0; ii < stop; ii++){
-
-		canvas1 = document.getElementById('view' + String(ii));
-		canvas1.dataset.index = ii;
-
-		//F and E are foreword, + is turn positive (cclockwise), - is turn negative (clockwise)
-		data = String("F");
-		rule = ruleSet[ii];	//console.log(rule);
-		/*rule = {		//dragon curve
-			'F': 'F+E+',
-			'E': '-F-E'
-			}
-		*/
-		system = new Lsystem(data, rule);
-	
-		for(var kk = 0; kk < 8; kk++){
-			system.step();
-		}
-
-		renderer = new LSystemRenderer(system, canvas1);
-		renderer.draw();
-
-		systems.push(system);
-		renderers.push(renderer);
-
-		/*
-		canvas1.addEventListener('click', function() {
-			var ruleString = JSON.stringify(systems[this.dataset.index].productionRules);
-			document.querySelector('#infobox').innerHTML = ruleString;
-		}, false);
-		*/
-	}
-});
-
-/*
-	//drawing every step
-
-	setInterval(function(){
-		ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-		system.step();
-		draw();
-		}, 200);
-		
-	
-
-*/
-
-</script>
-
-
-
+    </script>
 
 
 </html>
