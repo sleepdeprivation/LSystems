@@ -19,18 +19,34 @@ You should be able to see output in `index.html`, and an example of how the libr
 Check out this pdf:
 http://algorithmicbotany.org/papers/abop/abop-ch1.pdf
 
+#### What's inside?
+
 Lsystem class provides:
 
 ```javascript
-  Lsystem(seed, rules); //constructor
+  Lsystem(seed, rules);   //constructor
   step();                 //iterate once
+  stepn(4);               //iterate 4 times
 ```
 
 Renderer class:
 
 ```javascript
-  Renderer(config); //constructor
+  Renderer(config);         //constructor
   draw();                   //draw to the canvas
+```
+
+Generator class:
+
+```javascript
+
+  singleRuleRandom(x);    //return a rule of length x
+
+  ruleSetRandom();        //return a random ruleset
+
+  randomSystem();         //return a random LSystem
+
+  dragonCurve();          //return an LSystem that will render to the famous "dragon curve"
 ```
 
 Properties on the renderer that can be passed in the config block (along with their default values):
