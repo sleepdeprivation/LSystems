@@ -5,16 +5,20 @@
   "main": "main.js",
   "scripts": {
     "start": "node dist/main.js",
-    "test": "mocha ./dist/tests/*.js"
+    "test": "mocha ./dist/tests/*.js",
+    "build": "tsc; ./node_modules/webpack/bin/webpack.js -p",
+    "clean": "rm -r ./dist; rm lsystems.js"
   },
   "author": "Christian Burke",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.0.1",
     "@types/mocha": "^2.2.41",
+    "awesome-typescript-loader": "^3.2.1",
     "chai": "^4.0.2",
     "mocha": "^3.4.2",
-    "webpack": "^3.2.0"
+    "typescript": "^2.4.2",
+    "webpack": "^3.3.0"
   },
   "dependencies": {}
 }
