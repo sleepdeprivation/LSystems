@@ -1,22 +1,21 @@
 # LSystems
-Experiments with L-systems
 
-####About
+A little library for creating L-Systems, recently converted to typescript and webpack.
 
--A class for making a string from a set of rules and a seed in that "L-System" way.
+To compile, just `npm install` followed by `npm run build`. This should create `lsystems.js` which exports 3 classes:
 
--A renderer that renders to the canvas.
+* LSystem
+* LSystemRenderer
+* LSystemGenerator
 
-You can see it in action at http://cburke.scary4cat.com/javascript/LSystems/
+There are also a couple basic tests for `LSystem` in `src/tests`
 
-####What is an LSystem?
+You should be able to see output in `index.html`, and an example of how the library may be used.
 
-Kind of like a fractal...
+#### What is an LSystem?
 
-I read a good bit of this pdf:
+Check out this pdf:
 http://algorithmicbotany.org/papers/abop/abop-ch1.pdf
-
-####OK. What can it do?
 
 Lsystem class provides:
 
@@ -25,57 +24,51 @@ Lsystem class provides:
   step();                 //iterate once
 ```
 
-Renderer class provides:
+Renderer class:
 
 ```javascript
-  Renderer(system, canvas); //constructor
+  Renderer(config); //constructor
   draw();                   //draw to the canvas
 ```
 
-Properties on the renderer that can be changed (along with their default values:
+Properties on the renderer that can be passed in the config block (along with their default values):
+
+(you must include a `system` and a `canvas`)
 
 ```javascript
-	this.forwardStrings = ['F', 'E'];   //which characters mean "move forward"
-	this.turnLeftStrings = ['-'];       //which characters mean "turn right"
-	this.turnRightStrings = ['+'];      //which characters mean "turn left"
+    divisor = 2;
 
-	this.lineColor = "red";             //what color is the line we'll be drawing with
+    forwardStrings = ['F', 'E'];
+    turnLeftStrings = ['-'];
+    turnRightStrings = ['+'];
 
-	this.initialOrientation = 0;        //initial orientation (measured in radians)
-	this.theta = Math.PI/2;             //measured in radians
-	this.increment = 4;                 //distance (in px) that we move forward
+    RBGStrings = ['R', 'B', 'G']; //for changing colors
+    lineColors = ['red', 'blue', 'green'];
+
+    lineColor = "red";
+
+    initialOrientation = 0;	//pointing up
+    theta = Math.PI/this.divisor;
+    increment = 12;
 
 ```
 
-####A minimal example
+#### A minimal example
+
+You can find this in index.html
 
 ```javascript
+      	var canvas1 = document.getElementById("canvas");
 
-var system, renderer, seed, rule, canvas1;
+      	var data, system, renderer, canvas1, ii, kk;
+        console.log(lsystems);
 
-//grab hold of a canvas
-canvas1 = document.getElementById('view1');
-
-//we need a seed
-seed = "F";
-
-//and a rule set
-rule = {		//dragon curve
-		'F': 'F+E+',
-		'E': '-F-E'
-	}
-
-//make a new system
-system = new Lsystem(data, rule);
-
-
-//iterate a little bit
-for(var kk = 0; kk < 8; kk++){
-	system.step();
-}
-
-//render it
-renderer = new LSystemRenderer(system, canvas1);
-renderer.draw();
-
+        system = (new lsystems.LSystemGenerator).dragonCurve();
+        system.stepn(8);
+        renderCfg = {
+          system : system,
+          canvas : canvas
+        }
+        renderer = new lsystems.LSystemRenderer(renderCfg);
+        renderer.draw();
 ```
