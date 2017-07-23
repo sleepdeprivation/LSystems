@@ -12,6 +12,8 @@ There are also a couple basic tests for `LSystem` in `src/tests`
 
 You should be able to see output in `index.html`, and an example of how the library may be used.
 
+*Note: you **WILL** need typescript globally installed*
+
 #### What is an LSystem?
 
 Check out this pdf:
