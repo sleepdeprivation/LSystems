@@ -51,9 +51,13 @@ export class LSystemRenderer{
 
     ctx : any;
 
+    canvas : any;
+
     constructor(config : any){
 
       var canvas = config.canvas;
+
+      this.canvas = canvas;
 
       this.startX = canvas.width/2;		//starting location, (x,y)
       this.startY = canvas.height/2;
@@ -68,6 +72,13 @@ export class LSystemRenderer{
           this[prop] = config[prop];
         };
       }
+    }
+
+
+    clear(){
+      this.ctx.strokeStyle = "white";
+      this.ctx.drawRect(-1, -1, this.canvas.width + 1, this.canvas.height + 1);
+      this.ctx.stroke();
     }
 
   	draw(){
