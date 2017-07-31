@@ -77,7 +77,7 @@ export class LSystemRenderer{
 
     clear(){
       this.ctx.strokeStyle = "white";
-      this.ctx.drawRect(-1, -1, this.canvas.width + 1, this.canvas.height + 1);
+      this.ctx.fillRect(-1, -1, this.canvas.width + 1, this.canvas.height + 1);
       this.ctx.stroke();
     }
 
